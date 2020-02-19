@@ -50,44 +50,47 @@ def main():
     snmpwalk -v 2c -c public 192.168.4.165 1.3.6.1.4.1.96.100.7.1.5.3.0
     '''
     client = InfluxDBClient(host, port, user, password, dbname)
-    
-    wrs5 = '192.168.4.35'
-    wrs6 = '192.168.4.165'
-    OID = '1.3.6.1.4.1.96.100.7.1.5.3'
+
+    IP = [ '192.168.4.35', '192.168.4.165' ]
+    OID = dict(
+        cpu15min='1.3.6.1.4.1.96.100.7.1.5.3',
+        #wrsPtpServoState='1.3.6.1.4.1.96.100.7.5.1.6',
+        #wrsPtpRTT='1.3.6.1.4.1.96.100.7.5.1.13.1',
+        #wrsPtpDeltaTxM='1.3.6.1.4.1.96.100.7.5.1.16',
+        #wrsPtpDeltaRxM='1.3.6.1.4.1.96.100.7.5.1.17',
+        #wrsPtpDeltaTxS='1.3.6.1.4.1.96.100.7.5.1.18',
+        #wrsPtpDeltaRxS='1.3.6.1.4.1.96.100.7.5.1.19',
+        #wrsDateTAI='1.3.6.1.4.1.96.100.7.1.1.1',
+        #wrsMainSystemStatus='1.3.6.1.4.1.96.100.6.1.1',
+        #wrsOSStatus='1.3.6.1.4.1.96.100.6.1.2',
+        #wrsTimingStatus='1.3.6.1.4.1.96.100.6.1.3',
+        #wrsNetworkingStatus='1.3.6.1.4.1.96.100.6.1.4',
+        #wrsSpllMode='1.3.6.1.4.1.96.100.7.3.2.1',
+        #wrsSoftPLLStatus='1.3.6.1.4.1.96.100.6.2.2.2'
+    )
 
     interval = 10
 
     try:
         while True:
-            cpuload_wrs5 = walk( wrs5, OID )
-            json_body = [
-                {
-                    "measurement": "CPU",
-                    "tags": {
-                        "hostname": wrs5,
-                    },
-                    "fields": {
-                        "cpu15min" : cpuload_wrs5
+            for switch in IP:
+                out = {}
+                for key,value in OID.items():
+                    out[key] = walk( switch, value )
+
+                json_body = [
+                    {
+                        "measurement": "CPU",
+                        "tags": {
+                            "hostname": switch,
+                        },
+                        "fields": out
                     }
-                }
-            ]
-            # Write JSON to InfluxDB
-            client.write_points(json_body)
-            
-            cpuload_wrs6 = walk( wrs6, OID )
-            json_body = [
-            {
-                "measurement": "CPU",
-                "tags": {
-                    "hostname": wrs6,
-                },
-                "fields": {
-                    "cpu15min" : cpuload_wrs6
-                }
-            }
-            ]
-            # Write JSON to InfluxDB
-            client.write_points(json_body)
+                ]
+
+                # Write JSON to InfluxDB
+                client.write_points(json_body)
+                #print(json_body)
 
             # Wait for next sample
             sleep(interval)
