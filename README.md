@@ -1,10 +1,10 @@
-# WRS monitoring
+# White Rabbit Monitoring
 
-This repository contains different scripts and tools in order to monitor the performance and characterize the behavior of a White Rabbit System. 
+This repository contains different scripts and tools in order to monitor the performance and characterize the behavior of a White Rabbit System. For more details about White Rabbit, see https://www.ohwr.org/project/white-rabbit/wikis/home 
 
 ## General Structure
 
-The monitoring of the WR switches is primarily done using SNMP. The current setup is that all the data is acquired using the TICKS stack (influxDB, telegraf, grafana). Additional monitoring scripts exist to ease the acquisition of additional monitoring data and check the influene on snmp requests on the preformance. 
+The monitoring of the WR switches is primarily done using SNMP. The current setup is that all the data is acquired using a TICK stack (influxDB, telegraf, grafana). Additional monitoring scripts exist to ease the acquisition of additional monitoring data and check the influene on snmp requests on the preformance. 
 
 ### Prerequitites 
 
