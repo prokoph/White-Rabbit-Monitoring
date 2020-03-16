@@ -4,7 +4,7 @@ This repository contains different scripts and tools in order to monitor the per
 
 ## General Structure
 
-The monitoring of the WR switches is primarily done using SNMP. The current setup is that all the data is acquired using a TICK stack (influxDB, telegraf, grafana). Additional monitoring scripts exist to ease the acquisition of additional monitoring data and check the influene on snmp requests on the preformance. 
+The monitoring of the WR switches is primarily done using SNMP. The current setup is that all the data is acquired using a TICK stack (influxDB, telegraf, grafana). Additional monitoring scripts exist to ease the acquisition of additional monitoring data and check the influence of snmp requests on the performance. 
 
 ### Prerequitites 
 
@@ -15,6 +15,8 @@ The monitoring of the WR switches is primarily done using SNMP. The current setu
 
 ### Subdirectories
 
-1. scripts for all kind of tiny snippets to get data, store them in databases
+1. scripts for all kind of tiny snippets to get data, store them in databases, etc. 
 2. dashboards for different purposes of monitoring
+3. configs for the different SW tool configurations
+4. examples for obtaining and plotting the data 
 
