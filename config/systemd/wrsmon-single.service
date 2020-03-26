@@ -1,0 +1,14 @@
+[Unit]
+Description=WRS SNMP Monitoring Script
+Requires=influxdb.service
+After=influxdb.service
+
+[Service]
+Type=simple
+User=prokoph
+ExecStart=/home/prokoph/scripts/WRS_snmpwalk.py
+Restart=on-failure
+RestartSec=3
+
+[Install]
+WantedBy=multi-user.target

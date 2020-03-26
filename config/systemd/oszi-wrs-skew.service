@@ -1,0 +1,14 @@
+[Unit]
+Description=Oscilloscope Script for WR link monitoring
+Requires=influxdb.service
+After=influxdb.service
+
+[Service]
+Type=simple
+User=prokoph
+ExecStart=/home/prokoph/scripts/LeCroyOsci_test.py
+Restart=on-failure
+RestartSec=3
+
+[Install]
+WantedBy=multi-user.target
