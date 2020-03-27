@@ -28,9 +28,10 @@ OUT_B="/tmp/snmp-with-tables.conf"
 
 # 2) get the table OID to later remove them from fields
 fOID="/tmp/tableOIDs.txt"
-/usr/bin/snmptranslate -Tz -m WR-SWITCH-MIB | grep "Table" | awk -F $'"' '{print $4}' > $fOID
+/usr/bin/snmptranslate -Tz -m ${INFILE} | grep "Table" | awk -F $'"' '{print $4}' > $fOID
 
-COMMAND=""
+# do not bother telegraf with the naming convention/scalar definition fields
+COMMAND=" -e wrSwitchMIB -e 1.3.6.1.4.1.96.100.1"
 while read OID
 do
     COMMAND+=" -e $OID" 
@@ -41,5 +42,4 @@ rm -f $fOID
 echo "" >> $OUT_B
 /usr/bin/snmptranslate -Tz -m ${INFILE} | grep 1.3.6.1.4.1.96.100 | grep -v $COMMAND | awk -F $'\t+' '{print "  [[inputs.snmp.field]]\n    name = "$1 "\n    oid = "$2}' >> $OUT_B
 
-#TODO: change command in case no tables found! 
 ### End of Option B ###
