@@ -15,10 +15,9 @@ OUT_B="/tmp/snmp-with-tables.conf"
 
 
 ### Start of Option A ###
-# get all White Rabbit related OIDs as single fields into config file
-/usr/bin/snmptranslate -Tz -m ${INFILE} | grep "1.3.6.1.4.1.96.100" | awk -F $'\t+' '{print "  [[inputs.snmp.field]]\n    name = "$1 "\n    oid = "$2}' > ${OUT_A}
+# get all White Rabbit related OIDs as single fields into config file (adds .0 to oid)
+/usr/bin/snmptranslate -Tz -m ${INFILE} | grep "1.3.6.1.4.1.96.100" | awk -F $'\t+' '{print $1 " " $2}' | sed 's/"//g' | awk '{print "  [[inputs.snmp.field]]\n    name = \""$1"\"\n    oid = \""$2".0\""}' > ${OUT_A}
 ### End of Option A ###
-
 
 
 ### Start of Option B ###
@@ -40,6 +39,5 @@ rm -f $fOID
 
 # 3) get all fields from MIB file which do not belong to a table
 echo "" >> $OUT_B
-/usr/bin/snmptranslate -Tz -m ${INFILE} | grep 1.3.6.1.4.1.96.100 | grep -v $COMMAND | awk -F $'\t+' '{print "  [[inputs.snmp.field]]\n    name = "$1 "\n    oid = "$2}' >> $OUT_B
-
+/usr/bin/snmptranslate -Tz -m ${INFILE} | grep 1.3.6.1.4.1.96.100 | grep -v $COMMAND | awk -F $'\t+' '{print $1 " " $2}' | sed 's/"//g' | awk '{print "  [[inputs.snmp.field]]\n    name = \""$1"\"\n    oid = \""$2".0\""}' >> $OUT_B
 ### End of Option B ###
